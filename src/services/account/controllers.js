@@ -12,8 +12,9 @@ export const getAllAccounts = (req, res) => {
 };
 
 export const login = (req, res) => {
-    if (!req.body.Username || !req.body.Password) {
-        return res.send({ status: 0, message: 'Bạn chưa nhập Username hoặc Password' });
+    console.log('-AnhNT-login', req.body);
+    if (!req.body.Username || !req.body.Password || !req.body.HoTen) {
+        return res.send({ status: 0, message: 'Bạn chưa nhập đầy đủ thông tin!' });
     }
     Account.findOne({
         where: {

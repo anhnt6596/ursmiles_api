@@ -24,6 +24,17 @@ export const create = (req, res) => {
     });
 };
 
+// export const editbyMaSo = (req, res) => {
+//     TieuSuNhaKhoa.update(
+//         { ...req.body, },
+//         { where: { MASO: req.params.MaSo } }
+//     )
+//     .then((data, err) => {
+//         if (err) return res.send({ err });
+//         res.send({ status: 1, message: 'Cập nhật hồ sơ bênh nhân!' });
+//     })
+// };
+
 export const editbyMaSo = (req, res) => {
     TieuSuNhaKhoa.sequelize.query(
         `UPDATE TieuSuNhaKhoas
