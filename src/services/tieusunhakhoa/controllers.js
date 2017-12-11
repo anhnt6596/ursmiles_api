@@ -1,5 +1,4 @@
 import TieuSuNhaKhoa from './model';
-import { read } from 'fs';
 
 export const getAll = (req, res) => {
     TieuSuNhaKhoa.findAll({}).then((data, err) => {

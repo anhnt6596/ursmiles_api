@@ -13,7 +13,7 @@ export const getAllAccounts = (req, res) => {
 
 export const login = (req, res) => {
     console.log('-AnhNT-login', req.body);
-    if (!req.body.Username || !req.body.Password || !req.body.HoTen) {
+    if (!req.body.Username || !req.body.Password) {
         return res.send({ status: 0, message: 'Bạn chưa nhập đầy đủ thông tin!' });
     }
     Account.findOne({
