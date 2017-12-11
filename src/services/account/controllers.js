@@ -1,4 +1,4 @@
-import md5 from 'md5';
+// import md5 from 'md5';
 import jwt from 'jsonwebtoken';
 import jwtSecret from '../../config/jwtSecret';
 
@@ -19,7 +19,7 @@ export const login = (req, res) => {
     Account.findOne({
         where: {
             Username: req.body.Username,
-            Password: md5(req.body.Password),
+            Password: req.body.Password,
         },
     }).then((data, err) => {
         if (err) res.send('Err');
@@ -29,7 +29,7 @@ export const login = (req, res) => {
             const userData = {
                 ID: data.ID,
                 Username: data.Username,
-                Hoten: data.Hoten,
+                HoTen: data.HoTen,
                 DienThoai: data.DienThoai,
                 Email1: data.Email1,
                 Email2: data.Email2,
