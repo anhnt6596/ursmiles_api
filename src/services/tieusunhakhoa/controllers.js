@@ -70,3 +70,14 @@ export const editbyMaSo = (req, res) => {
         res.send(data);
     })
 };
+
+export const requireRole = (roles) => {
+    return function(req, res, next) {
+        console.log(req.session)
+        if(req.session.token && (req.session.role === 'admin'|| req.session.role === roles)){
+            next();
+        }else {
+            res.send({ status : 0, message: 'Not authenticate'});
+        }
+    }
+}

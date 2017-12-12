@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-
+import compression from 'compression';
 import errorHandler from './config/errorHandler';
 import services from './services';
 
@@ -10,6 +10,7 @@ const app = express();
 
 app.use(cookieParser());
 
+app.use(compression());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

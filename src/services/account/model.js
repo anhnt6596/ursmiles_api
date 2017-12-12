@@ -40,6 +40,10 @@ const Account = dentistassistant.define('Account', {
     },
     DiaChi: {
         type: Sequelize.STRING,
+    },
+    role   :{
+        type: Sequelize.STRING,
+        defaultValue: "user"
     }
 });
 

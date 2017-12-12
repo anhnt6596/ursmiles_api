@@ -34,11 +34,14 @@ export const login = (req, res) => {
                 Email1: data.Email1,
                 Email2: data.Email2,
                 DiaChi: data.DiaChi,
+                role : data.role
             };
             const token = jwt.sign({
                 userData,
             }, jwtSecret.jwtSecret);
             req.session.token = token;
+            req.session.role  = userData.role;
+            
             console.log('decode >>>>>>>', jwt.verify(token, jwtSecret.jwtSecret));
             res.send({
                 status: 1,
@@ -92,3 +95,34 @@ export const edit = (req, res) => {
         }
     });
 };
+
+export const requireRole = (roles) => {
+    return function(req, res, next) {
+        if(req.session.token && req.session.role === roles){
+            next();
+        }else {
+            res.send({ status : 0, message: 'Not authenticate'});
+        }
+    }
+}
+
+export const permission = (req, res) => {
+    Account.findOne({
+        where: {
+            Username: req.body.Username,
+        },
+    }).then((user, err) => {
+        if (err) return res.send({ err });
+        if (user === null) {
+            return res.send({ status: 0, message: 'Cannot update userdata!' })
+        } else {
+            Account.update( 
+                { ...req.body, },
+                { where: { Username: req.body.Username } }
+            ).then((data, error) => {
+                if (error) res.send({ err: error });
+                res.send({ status: 1, message: 'Update up success!' });
+            });
+        }
+    });
+}

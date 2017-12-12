@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAll, editbyMaSo, create, requireRole} from './controllers';
+import {getAll, create, editbyMaSo, requireRole} from './controller';
 
 const router = express.Router();
 
@@ -9,8 +9,5 @@ router.post('/create',requireRole("doctor") ,create);
 
 router.post('/edit/:MaSo',requireRole("doctor"), editbyMaSo);
 
-router.get('/getbyid/:id',requireRole("doctor"), (req, res) => {
-    res.send('getById');
-});
 
 export default router;
