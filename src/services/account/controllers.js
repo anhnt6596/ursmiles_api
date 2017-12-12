@@ -77,18 +77,49 @@ export const edit = (req, res) => {
     Account.findOne({
         where: {
             ID: req.params.ID,
+            Password: req.body.confirmPassword,
         },
     }).then((user, err) => {
         if (err) return res.send({ err });
         if (user === null) {
-            return res.send({ status: 0, message: 'Cannot update userdata!' })
+            return res.send({ status: 0, message: 'Sai mật khẩu!' })
         } else {
             Account.update( 
                 { ...req.body, },
                 { where: { ID: req.params.ID } }
             ).then((data, error) => {
                 if (error) res.send({ err: error });
-                res.send({ status: 1, message: 'Update up success!', data });
+                Account.findOne({
+                    where: {
+                        ID: req.params.ID,
+                    },
+                }).then((data, err) => {
+                    if (err) res.send('Err');
+                    if (data === null) {
+                        return res.send({ status: 0, message: 'Có lỗi xảy ra!' })
+                    } else {
+                        const userData = {
+                            ID: data.ID,
+                            Username: data.Username,
+                            HoTen: data.HoTen,
+                            DienThoai: data.DienThoai,
+                            Email1: data.Email1,
+                            Email2: data.Email2,
+                            DiaChi: data.DiaChi,
+                            role : data.role
+                        };
+                        const token = jwt.sign({
+                            userData,
+                        }, jwtSecret.jwtSecret);
+                        req.session.token = token;
+                        req.session.role  = userData.role;
+                        res.send({
+                            status: 1,
+                            token,
+                            message: 'Cập nhật thành công!',
+                        });
+                    }
+                });
             });
         }
     });
