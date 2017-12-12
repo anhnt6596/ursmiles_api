@@ -73,7 +73,6 @@ const TieuSuYKhoa = dentistassistant.define('TieuSuYKhoa', {
     DiUng: {
         type: Sequelize.BOOLEAN,
     },
-    
 });
 
 export default TieuSuYKhoa;

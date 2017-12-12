@@ -24,7 +24,7 @@ export const login = (req, res) => {
     }).then((data, err) => {
         if (err) res.send('Err');
         if (data === null) {
-            return res.send({ status: 0, message: 'Incorrect username or password!' })
+            return res.send({ status: 0, message: 'Tên đăng nhập hoặc mật khẩu sai!' })
         } else {
             const userData = {
                 ID: data.ID,
@@ -41,8 +41,6 @@ export const login = (req, res) => {
             }, jwtSecret.jwtSecret);
             req.session.token = token;
             req.session.role  = userData.role;
-            
-            console.log('decode >>>>>>>', jwt.verify(token, jwtSecret.jwtSecret));
             res.send({
                 status: 1,
                 token,

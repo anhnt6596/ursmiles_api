@@ -1,23 +1,18 @@
 import BenhNhan from '../benhnhan/model';
 import TieuSuNhaKhoa from '../tieusunhakhoa/router';
 import TieuSuYKhoa from '../tieusuykhoa/router';
-
-import { editbyMaSo as editYKhoa } from '../tieusuykhoa/controllers';
-import { editbyMaSo as editNhaKhoa } from '../tieusunhakhoa/controllers';
-
+import ThongTinBenhNhan from './model';
 
 export const getByMaSo = (req, res) => {
-    console.log('-AnhNT-', req.params);
-    BenhNhan.sequelize.query(`
-    select *
-    from BenhNhans, TieuSuNhaKhoas, TieuSuYKhoas
-    where TieuSuNhaKhoas.MaSo = BenhNhans.MaSo
-        and TieuSuYKhoas.MaSo = BenhNhans.MaSo
-        and BenhNhans.MaSo=${req.params.MaSo};
-    `)
-    .then(data => res.send(data))
+    ThongTinBenhNhan.findOne({
+        where: { MaSo: req.params.MaSo }
+    }).then((data, err) => res.send(data))
 }
 
 export const editByMaSo = (req, res) => {
-    res.send('ngu');
+    // const updateBenhNhan = BenhNhan.update(
+    //     { ...req.body, },
+    //     { where: { MaSo: req.params.MaSo } }
+    // );
+    res.send('doing...');
 }
