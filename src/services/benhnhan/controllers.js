@@ -13,7 +13,7 @@ export const create = (req, res) => {
         if (entries.dataValues.MaSo) {
             const lastMaSo = entries.dataValues.MaSo;
             MaSo = Number(lastMaSo) + 1;
-            MaSo = ('000000000' + MaSo).slice(-9);
+            MaSo = ('000000000000' + MaSo).slice(-12);
         } else {
             MaSo = '000000000';
         }
@@ -36,6 +36,16 @@ export const getAll = (req, res) => {
     });
 };
 
+export const getByIDBacSi = (req, res) => {
+    BenhNhan.findAll({
+        where: { IDBacSi: req.params.IDBacSi },
+        order: [['createdAt', 'DESC']]
+    }).then((data, err) => {
+        if (err) res.send({ status: 1, err, message: 'Có lỗi xảy ra!' });
+        res.send({ status: 1, data });
+    });
+};
+
 export const editbyMaSo = (req, res) => {
     BenhNhan.update(
         { ...req.body, },
@@ -50,9 +60,9 @@ export const editbyMaSo = (req, res) => {
 export const requireRole = (roles) => {
     return function(req, res, next) {
         console.log(req.session)
-        if(req.session.token && (req.session.role === 'admin'|| req.session.role === roles)){
+        if (req.session.token && (req.session.role === 'admin'|| req.session.role === roles)){
             next();
-        }else {
+        } else {
             res.send({ status : 0, message: 'Not authenticate'});
         }
     }

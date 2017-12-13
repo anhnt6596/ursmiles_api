@@ -5,9 +5,12 @@ import jwtSecret from '../../config/jwtSecret';
 import Account from './model';
 
 export const getAllAccounts = (req, res) => {
-    Account.findAll({}).then((data, err) => {
-        if (err) return res.send({ err });
-        res.send(data);
+    Account.findAll({
+        attributes: ['ID', 'Username', 'HoTen', 'DienThoai', 'Email1', 'Email2', 'role'],
+        order: [['createdAt', 'DESC']]
+    }).then((data, err) => {
+        if (err) return res.send({ status: 0, err });
+        res.send({ status: 1, data });
     });
 };
 
@@ -72,7 +75,7 @@ export const signup = (req, res) => {
         }
     });
 };
-
+// sửa thông tin dựa vào ID
 export const edit = (req, res) => {
     Account.findOne({
         where: {
@@ -82,7 +85,7 @@ export const edit = (req, res) => {
     }).then((user, err) => {
         if (err) return res.send({ err });
         if (user === null) {
-            return res.send({ status: 0, message: 'Sai mật khẩu!' })
+            return res.send({ status: 0, message: 'Sai mật khẩu!' });
         } else {
             Account.update( 
                 { ...req.body, },
@@ -125,11 +128,31 @@ export const edit = (req, res) => {
     });
 };
 
+export const changeRole = (req, res) => {
+    Account.findOne({
+        attributes: [ 'role' ],
+        where: {
+            Username: req.body.Username,
+            Password: req.body.Password,
+        },
+    }).then((data, err) => {
+        if (err) return res.send({ status: 0 });
+        data && data.role === "admin"
+        && Account.update(
+            { role: req.body.role },
+            { where: { ID: req.body.ID } }
+        ).then((data, err) => {
+            if (err) return res.send({ status: 0 });
+            return res.send({ status: 1 });
+        });
+    });
+}
+
 export const requireRole = (roles) => {
-    return function(req, res, next) {
-        if(req.session.token && req.session.role === roles){
+    return (req, res, next) => {
+        if (req.session.token && req.session.role === roles) {
             next();
-        }else {
+        } else {
             res.send({ status : 0, message: 'Not authenticate'});
         }
     }

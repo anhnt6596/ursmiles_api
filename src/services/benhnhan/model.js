@@ -26,6 +26,9 @@ const BenhNhan = dentistassistant.define('BenhNhan', {
             len: [0, 20],
         },
     },
+    IDBacSi: {
+        type: Sequelize.INTEGER,
+    },
     NgayBatDau: {
         type: Sequelize.DATE,
     },
