@@ -4,13 +4,29 @@ import BenhNhan from './model';
 export const create = (req, res) => {
     // const { MaHoSo, MaSo, NgayBatDau, BacSi, Ho, Ten, NgaySinh, GioiTinh, DanToc,
     //     DiaChi, DienThoai, Email, Facebook, Twitter, Anh } = req.body;
-    if (!req.body.MaSo || !req.body.MaHoSo) return res.json({ err: 'MaSo or MaHoSo is undefined!' })
-    BenhNhan.create({
-        ...req.body,
-    }).then((data, err) => {
-        if (err) res.json({ err });
-        res.send({ status: 1, data, message: 'Tạo thành công!' });
+    let MaSo;
+    BenhNhan.findOne({
+        limit: 1,
+        attribute: ['MaSo'],
+        order: [['createdAt', 'DESC']]
+    }).then((entries, err) => {
+        if (entries.dataValues.MaSo) {
+            const lastMaSo = entries.dataValues.MaSo;
+            MaSo = Number(lastMaSo) + 1;
+            MaSo = ('000000000' + MaSo).slice(-9);
+        } else {
+            MaSo = '000000000';
+        }
+        if (!req.body.MaHoSo || !req.body.Ho || !req.body.Ten) return res.json({ status: 0, message: 'Bạn nhập thiếu thông tin!' });
+        BenhNhan.create({
+            ...req.body,
+            MaSo,
+        }).then((data, err) => {
+            if (err) res.json({ err });
+            res.send({ status: 1, data, message: `Tạo thành công với Mã số: ${MaSo}` });
+        });
     });
+    
 };
 
 export const getAll = (req, res) => {

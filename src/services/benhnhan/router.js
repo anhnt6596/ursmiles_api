@@ -5,11 +5,11 @@ const router = express.Router();
 
 router.get('/',requireRole("admin"), getAll);
 
-router.post('/create',requireRole("doctor") ,create);
+router.post('/create', create);
 
-router.post('/edit/:MaSo',requireRole("doctor"), editbyMaSo);
+router.post('/edit/:MaSo', requireRole("doctor"), editbyMaSo);
 
-router.get('/getbyid/:id',requireRole("doctor"), (req, res) => {
+router.get('/getbyid/:id', requireRole("doctor"), (req, res) => {
     res.send('getById');
 });
 
