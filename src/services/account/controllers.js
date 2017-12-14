@@ -78,32 +78,23 @@ export const signup = (req, res) => {
 };
 // sửa thông tin dựa vào ID
 export const edit = (req, res) => {
-    const confirmPassword = jwt.verify(req.body.confirmPassword, jwtSecret.jwtSecret);
     Account.findOne({
         where: {
             ID: req.params.ID,
-            Password: confirmPassword.token,
+            Password: req.body.confirmPassword,
         },
     }).then((user, err) => {
         if (err) return res.send({ err });
         if (user === null) {
             return res.send({ status: 0, message: 'Sai mật khẩu!' });
         } else {
-            const NewPassword = req.body.isChangePassword
-            ? jwt.verify(req.body.Password, jwtSecret.jwtSecret)
-            : confirmPassword;
             Account.update( 
-                {
-                    ...req.body,
-                    Password: NewPassword.token,
-                },
+                { ...req.body },
                 { where: { ID: req.params.ID } }
             ).then((data, error) => {
                 if (error) res.send({ err: error });
                 Account.findOne({
-                    where: {
-                        ID: req.params.ID,
-                    },
+                    where: { ID: req.params.ID },
                 }).then((data, err) => {
                     if (err) res.send('Err');
                     if (data === null) {
@@ -122,8 +113,6 @@ export const edit = (req, res) => {
                         const token = jwt.sign({
                             userData,
                         }, jwtSecret.jwtSecret);
-                        req.session.token = token;
-                        req.session.role  = userData.role;
                         res.send({
                             status: 1,
                             token,
@@ -137,35 +126,33 @@ export const edit = (req, res) => {
 };
 
 export const changeRole = (req, res) => {
-    const auth = jwt.verify(req.body.token, jwtSecret.jwtSecret);
     Account.findOne({
         attributes: [ 'role' ],
         where: {
-            Username: auth.Username,
-            Password: auth.Password,
+            Username: req.body.Username,
+            Password: req.body.Password,
         },
     }).then((data, err) => {
-        if (err) return res.send({ status: 0 });
-        data && data.role === "admin"
-        && Account.update(
+        if (err) return res.send({ status: 0, message: 'Lỗi!' });
+        (data && data.role === "admin")
+        ? Account.update(
             { role: req.body.role },
             { where: { ID: req.body.ID } }
         ).then((data, err) => {
             if (err) return res.send({ status: 0 });
             return res.send({ status: 1 });
-        });
+        })
+        : res.send({ status: 0, message: 'Xác thực thất bại!' })
     });
 }
 
-export const requireRole = (roles) => {
-    return function(req, res, next) {
-        let userData = req.body.token;
-        let decoded = jwtDecode(userData);
-        if (req.body.token && (decoded.role === 'admin'|| decoded.role === roles)){
-            next();
-        } else {
-            res.send({ status : 0, message: 'Not authenticate'});
-        }
+export const requireRole = (roles) => (req, res, next) => {
+    let userData = req.body.token;
+    let decoded = jwtDecode(userData);
+    if (req.body.token && (decoded.userData.role === 'admin'|| decoded.userData.role === roles)){
+        next();
+    } else {
+        res.send({ status : 0, message: 'Not authenticate'});
     }
 }
 

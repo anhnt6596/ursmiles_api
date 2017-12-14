@@ -20,12 +20,8 @@ router.post('/register', signup);
 
 router.post('/edit/:ID', edit);
 
-router.post('/changerole', changeRole);
+router.post('/changerole', requireRole("admin"), changeRole);
 
-router.get('/getbyname/:username', (req, res) => {
-    res.send('getByUsername');
-});
-
-router.post('/permission',requireRole("admin"), permission);
+router.post('/permission', requireRole("admin"), permission);
 
 export default router;
