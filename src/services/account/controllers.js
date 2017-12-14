@@ -1,6 +1,7 @@
 // import md5 from 'md5';
 import jwt from 'jsonwebtoken';
 import jwtSecret from '../../config/jwtSecret';
+var jwtDecode = require('jwt-decode');
 
 import Account from './model';
 
@@ -157,8 +158,10 @@ export const changeRole = (req, res) => {
 }
 
 export const requireRole = (roles) => {
-    return (req, res, next) => {
-        if (req.session.token && req.session.role === roles) {
+    return function(req, res, next) {
+        let userData = req.body.token;
+        let decoded = jwtDecode(userData);
+        if (req.body.token && (decoded.role === 'admin'|| decoded.role === roles)){
             next();
         } else {
             res.send({ status : 0, message: 'Not authenticate'});
