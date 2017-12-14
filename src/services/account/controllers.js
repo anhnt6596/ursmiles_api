@@ -68,7 +68,6 @@ export const signup = (req, res) => {
         } else {
             Account.create({
                 ...req.body,
-                Password: md5(req.body.Password),
             }).then((data, error) => {
                 if (error) res.send({ err: error });
                 res.send({ status: 1, message: 'Sign up success!', data });
