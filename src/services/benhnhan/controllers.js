@@ -1,4 +1,6 @@
 import BenhNhan from './model';
+var jwtDecode = require('jwt-decode');
+
 // import sequelize from 'sequelize';
 
 export const create = (req, res) => {
@@ -59,8 +61,9 @@ export const editbyMaSo = (req, res) => {
 
 export const requireRole = (roles) => {
     return function(req, res, next) {
-        console.log(req.session)
-        if (req.session.token && (req.session.role === 'admin'|| req.session.role === roles)){
+        let userData = req.body.token;
+        let decoded = jwtDecode(userData);
+        if (req.body.token && (decoded.role === 'admin'|| decoded.role === roles)){
             next();
         } else {
             res.send({ status : 0, message: 'Not authenticate'});
