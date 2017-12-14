@@ -1,34 +1,6 @@
 import BenhNhan from './model';
 // import sequelize from 'sequelize';
 
-export const create = (req, res) => {
-    // const { MaHoSo, MaSo, NgayBatDau, BacSi, Ho, Ten, NgaySinh, GioiTinh, DanToc,
-    //     DiaChi, DienThoai, Email, Facebook, Twitter, Anh } = req.body;
-    let MaSo;
-    BenhNhan.findOne({
-        limit: 1,
-        attribute: ['MaSo'],
-        order: [['createdAt', 'DESC']]
-    }).then((entries, err) => {
-        if (entries.dataValues.MaSo) {
-            const lastMaSo = entries.dataValues.MaSo;
-            MaSo = Number(lastMaSo) + 1;
-            MaSo = ('000000000000' + MaSo).slice(-12);
-        } else {
-            MaSo = '000000000';
-        }
-        if (!req.body.MaHoSo || !req.body.Ho || !req.body.Ten) return res.json({ status: 0, message: 'Bạn nhập thiếu thông tin!' });
-        BenhNhan.create({
-            ...req.body,
-            MaSo,
-        }).then((data, err) => {
-            if (err) res.json({ err });
-            res.send({ status: 1, data, message: `Tạo thành công với Mã số: ${MaSo}` });
-        });
-    });
-    
-};
-
 export const getAll = (req, res) => {
     BenhNhan.findAll({}).then((data, err) => {
         if (err) res.send({ err });

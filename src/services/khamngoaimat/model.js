@@ -6,9 +6,9 @@ const KhamNgoaiMat = dentistassistant.define('KhamNgoaiMat', {
         type: Sequelize.INTEGER,
         allowNull: false,
         unique: true,
-        autoIncrement: true
+        autoIncrement: true,
     },
-    ID_BenhNha: {
+    MaSo: {
         type: Sequelize.INTEGER,
         allowNull: false,
         primaryKey: true,

@@ -77,18 +77,25 @@ export const signup = (req, res) => {
 };
 // sửa thông tin dựa vào ID
 export const edit = (req, res) => {
+    const confirmPassword = jwt.verify(req.body.confirmPassword, jwtSecret.jwtSecret);
     Account.findOne({
         where: {
             ID: req.params.ID,
-            Password: req.body.confirmPassword,
+            Password: confirmPassword.token,
         },
     }).then((user, err) => {
         if (err) return res.send({ err });
         if (user === null) {
             return res.send({ status: 0, message: 'Sai mật khẩu!' });
         } else {
+            const NewPassword = req.body.isChangePassword
+            ? jwt.verify(req.body.Password, jwtSecret.jwtSecret)
+            : confirmPassword;
             Account.update( 
-                { ...req.body, },
+                {
+                    ...req.body,
+                    Password: NewPassword.token,
+                },
                 { where: { ID: req.params.ID } }
             ).then((data, error) => {
                 if (error) res.send({ err: error });
@@ -129,11 +136,12 @@ export const edit = (req, res) => {
 };
 
 export const changeRole = (req, res) => {
+    const auth = jwt.verify(req.body.token, jwtSecret.jwtSecret);
     Account.findOne({
         attributes: [ 'role' ],
         where: {
-            Username: req.body.Username,
-            Password: req.body.Password,
+            Username: auth.Username,
+            Password: auth.Password,
         },
     }).then((data, err) => {
         if (err) return res.send({ status: 0 });

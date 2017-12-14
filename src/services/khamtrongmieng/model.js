@@ -6,7 +6,7 @@ const KhamTrongMieng = dentistassistant.define('KhamTrongMieng', {
         type: Sequelize.INTEGER,
         allowNull: false,
         unique: true,
-        autoIncrement: true
+        autoIncrement: true,
     },
     MaSo: {
         type: Sequelize.STRING,
