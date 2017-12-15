@@ -4,6 +4,8 @@ import TieuSuYKhoa from '../tieusuykhoa/model';
 import KhamNgoaiMat from '../khamngoaimat/model';
 import KhamTrongMieng from '../khamtrongmieng/model';
 import ThongTinBenhNhan from './model';
+import jwt from 'jsonwebtoken';
+import jwtSecret from '../../config/jwtSecret';
 
 export const create = (req, res) => {
     // const { MaHoSo, MaSo, NgayBatDau, BacSi, Ho, Ten, NgaySinh, GioiTinh, DanToc,
@@ -39,7 +41,15 @@ export const create = (req, res) => {
 export const getByMaSo = (req, res) => {
     ThongTinBenhNhan.findOne({
         where: { MaSo: req.params.MaSo }
-    }).then((data, err) => res.send(data))
+    }).then((data, err) => {
+        const decode = jwt.verify(req.body.token, jwtSecret.jwtSecret);
+        console.log('-AnhNT-', decode);
+        if (decode.userData.role === 'admin' || data.IDBacSi === decode.userData.ID) {
+            res.send({ status: 1, data });
+        } else {
+            res.send({ status: 0, message: 'Bạn không có quyền xem hồ sơ này!' });
+        }
+    });
 }
 
 export const editByMaSo = (req, res) => {
@@ -56,7 +66,12 @@ export const editByMaSo = (req, res) => {
         { where: { MaSo: req.body.MaSo } }
     );
     Promise.all([p1, p2, p3]).then((values, err) => { 
-        if (err) return res.send({ status:0, message: 'Lỗi không xác định' });
+        if (err) return res.send({ status: 0, message: 'Lỗi không xác định' });
         res.send({ status: 1, message: 'Cập nhập thành công'});
     });
 }
+
+// export const checkBacSi = (req, res, next) => {
+//     console.log('-AnhNT-', jwt.verify(req.body.token, jwtSecret.jwtSecret));
+//     next();
+// }

@@ -160,6 +160,9 @@ const ThongTinBenhNhan = dentistassistant.define('ThongTinBenhNhan', {
     DiUng: {
         type: Sequelize.BOOLEAN,
     },
+    IDBacSi: {
+        type: Sequelize.STRING,
+    },
 }, {
     timestamps: false,
 });
