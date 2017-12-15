@@ -24,10 +24,17 @@ export const editbyMaSo = (req, res) => {
         { where: { MaSo: req.params.MaSo } }
     )
     .then((data, err) => {
-        if (err) return res.send({ err });
+        if (err) return res.send({ status: 0, message: 'Lỗi không xác định' });
         res.send({ status: 1, message: 'Cập nhật hồ sơ bênh nhân!' });
     })
 }
+
+export const getByMaSo = (req, res) => {
+    KhamTrongMieng.findOne({
+        where: { MaSo: req.params.MaSo }
+    }).then((data, err) => res.send(data))
+}
+
 
 export const requireRole = (roles) => {
     return function(req, res, next) {

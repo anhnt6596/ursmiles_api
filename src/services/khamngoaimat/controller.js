@@ -19,14 +19,21 @@ export const create = (req,res) => {
 }
 
 export const editbyMaSo = (req, res) => {
+    console.log(req.body);
     KhamNgoaiMat.update(
         { ...req.body },
         { where: { MaSo: req.params.MaSo } }
     )
     .then((data, err) => {
-        if (err) return res.send({ err });
+        if (err) return res.send({ status: 0, message: 'Lỗi không xác định'});
         res.send({ status: 1, message: 'Cập nhật hồ sơ bênh nhân!' });
     })
+}
+
+export const getByMaSo = (req, res) => {
+    KhamNgoaiMat.findOne({
+        where: { MaSo: req.params.MaSo }
+    }).then((data, err) => res.send(data))
 }
 
 export const requireRole = (roles) => {

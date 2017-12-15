@@ -76,7 +76,7 @@ const KhamTrongMieng = dentistassistant.define('KhamTrongMieng', {
     CanChia_mm: {
         type: Sequelize.FLOAT
     },
-    NuoiRangNanhHD: {
+    NuouRangNanhHD: {
         type: Sequelize.STRING,
         validate: {
             len: [0,50]
