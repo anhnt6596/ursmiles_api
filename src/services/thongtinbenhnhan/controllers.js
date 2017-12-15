@@ -43,9 +43,20 @@ export const getByMaSo = (req, res) => {
 }
 
 export const editByMaSo = (req, res) => {
-    // const updateBenhNhan = BenhNhan.update(
-    //     { ...req.body, },
-    //     { where: { MaSo: req.params.MaSo } }
-    // );
-    res.send('doing...');
+    const p1 = BenhNhan.update(
+        { ...req.body },
+        { where: { MaSo: req.body.MaSo } }
+    );
+    const p2 = TieuSuNhaKhoa.update(
+        { ...req.body },
+        { where: { MaSo: req.body.MaSo } }
+    );
+    const p3 = TieuSuYKhoa.update(
+        { ...req.body },
+        { where: { MaSo: req.body.MaSo } }
+    );
+    Promise.all([p1, p2, p3]).then((values, err) => { 
+        if (err) return res.send({ status:0, message: 'Lỗi không xác định' });
+        res.send({ status: 1, message: 'Cập nhập thành công'});
+    });
 }
