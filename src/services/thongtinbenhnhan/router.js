@@ -3,7 +3,7 @@ import { getByMaSo, editByMaSo, create } from './controllers';
 
 const router = express.Router();
 
-router.get('/:MaSo', getByMaSo);
+router.post('/:MaSo', getByMaSo);
 
 router.post('/create', create);
 
